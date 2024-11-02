@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Geometry Calculator</title>
+    <script>
+        async function calculateArea(event) {
+            event.preventDefault();  // Prevent the form from submitting the traditional way
+            const formData = new FormData(event.target);  // Get form data
+
+            try {
+                const response = await fetch(event.target.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                // Check if response is OK (status in the range 200-299)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();  // Parse the JSON response
+                const outputDiv = event.target.querySelector('.output'); // Get output div specific to the form
+
+                // Check if the response contains an area
+                if (result.area !== undefined) {
+                    outputDiv.innerHTML = `<strong>Square Area:</strong> ${result.area}`;
+                } else if (result.cube_surface_area !== undefined) {
+                    outputDiv.innerHTML = `<strong>Cube Surface Area:</strong> ${result.cube_surface_area}`;
+                } else {
+                    outputDiv.innerHTML = `<strong>Error:</strong> ${result.error}`;
+                }
+            } catch (error) {
+                // Handle fetch error
+                const outputDiv = event.target.querySelector('.output'); // Get output div specific to the form
+                outputDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Geometry Calculator</h1>
+
+    <!-- Form for Square Area Calculation -->
+    <form action="/luas-persegi" method="post" onsubmit="calculateArea(event)">
+        <h2>Calculate Square Area</h2>
+        Side Length: <input type="number" name="side_length" step="any" required>
+        <button type="submit">Calculate</button>
+        <div class="output"></div>  <!-- Placeholder for output specific to this form -->
+    </form>
+
+    <!-- Form for Cube Surface Area Calculation -->
+    <form action="/luas-permukaan-kubus" method="post" onsubmit="calculateArea(event)">
+        <h2>Calculate Cube Surface Area</h2>
+        Edge Length: <input type="number" name="edge" step="any" required>
+        <button type="submit">Calculate</button>
+        <div class="output"></div>  <!-- Placeholder for output specific to this form -->
+    </form>
+</body>
+</html>
