@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, jsonify
 import requests
 
 # Update these URLs to the correct ones for your functions
-FAASD_API_URL_persegi = "http://34.236.149.51:8080/function"
-FAASD_API_URL_kubus = "http://184.72.133.223:8080/function"
+FAASD_API_URL_persegi = "http://3.94.106.230:8080/function"
+FAASD_API_URL_LUAS_PERMUKAAN_KUBUS = "http://3.208.13.173:8080/function"
 
 app = Flask(__name__)
 
@@ -51,7 +51,7 @@ def luas_permukaan_kubus():
         edge = float(edge)
 
         # Call the FAASD API
-        response = requests.post(f"{FAASD_API_URL_kubus}/luas-permukaan-kubus", json={"edge": edge})
+        response = requests.post(f"{FAASD_API_URL_LUAS_PERMUKAAN_KUBUS}/luas-permukaan-kubus", json={"edge": edge})
         response.raise_for_status()  # Raise an error for bad responses
         response_data = response.json()
 

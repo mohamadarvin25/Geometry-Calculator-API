@@ -3,10 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>Geometry Calculator</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            padding-top: 60px;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #0056b3, #17a2b8);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #0056b3;
+            text-align: center;
+        }
+    </style>
+
     <script>
         async function calculateArea(event) {
-            event.preventDefault();  // Prevent the form from submitting the traditional way
-            const formData = new FormData(event.target);  // Get form data
+            event.preventDefault();
+            const formData = new FormData(event.target);
 
             try {
                 const response = await fetch(event.target.action, {
@@ -14,47 +64,59 @@
                     body: formData
                 });
 
-                // Check if response is OK (status in the range 200-299)
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
 
-                const result = await response.json();  // Parse the JSON response
-                const outputDiv = event.target.querySelector('.output'); // Get output div specific to the form
+                const result = await response.json();
+                const outputDiv = event.target.querySelector('.output');
 
-                // Check if the response contains an area
                 if (result.area !== undefined) {
-                    outputDiv.innerHTML = `<strong>Square Area:</strong> ${result.area}`;
+                    outputDiv.innerHTML = `<div class="alert alert-info"><strong>Square Area:</strong> ${result.area}</div>`;
                 } else if (result.cube_surface_area !== undefined) {
-                    outputDiv.innerHTML = `<strong>Cube Surface Area:</strong> ${result.cube_surface_area}`;
+                    outputDiv.innerHTML = `<div class="alert alert-info"><strong>Cube Surface Area:</strong> ${result.cube_surface_area}</div>`;
                 } else {
-                    outputDiv.innerHTML = `<strong>Error:</strong> ${result.error}`;
+                    outputDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${result.error}</div>`;
                 }
             } catch (error) {
-                // Handle fetch error
-                const outputDiv = event.target.querySelector('.output'); // Get output div specific to the form
-                outputDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                const outputDiv = event.target.querySelector('.output');
+                outputDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${error.message}</div>`;
             }
         }
     </script>
 </head>
 <body>
-    <h1>Geometry Calculator</h1>
+    <div class="header">
+        <h1>Mohamad Arvin Fadriansyah - 2006596996</h1>
+    </div>
 
-    <!-- Form for Square Area Calculation -->
-    <form action="/luas-persegi" method="post" onsubmit="calculateArea(event)">
-        <h2>Calculate Square Area</h2>
-        Side Length: <input type="number" name="side_length" step="any" required>
-        <button type="submit">Calculate</button>
-        <div class="output"></div>  <!-- Placeholder for output specific to this form -->
-    </form>
+    <div class="container">
+        <h1 class="text-center mb-4">Geometry Calculator</h1>
 
-    <!-- Form for Cube Surface Area Calculation -->
-    <form action="/luas-permukaan-kubus" method="post" onsubmit="calculateArea(event)">
-        <h2>Calculate Cube Surface Area</h2>
-        Edge Length: <input type="number" name="edge" step="any" required>
-        <button type="submit">Calculate</button>
-        <div class="output"></div>  <!-- Placeholder for output specific to this form -->
-    </form>
+        <!-- Form for Square Area Calculation -->
+        <form class="mb-4" action="/luas-persegi" method="post" onsubmit="calculateArea(event)">
+            <h2 class="section-title">Calculate Square Area</h2>
+            <div class="mb-3">
+                <label for="side_length" class="form-label">Side Length:</label>
+                <input type="number" name="side_length" id="side_length" class="form-control" step="any" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Calculate</button>
+            <div class="output mt-3"></div>
+        </form>
+
+        <!-- Form for Cube Surface Area Calculation -->
+        <form action="/luas-permukaan-kubus" method="post" onsubmit="calculateArea(event)">
+            <h2 class="section-title">Calculate Cube Surface Area</h2>
+            <div class="mb-3">
+                <label for="edge" class="form-label">Edge Length:</label>
+                <input type="number" name="edge" id="edge" class="form-control" step="any" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Calculate</button>
+            <div class="output mt-3"></div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JavaScript Bundle (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
